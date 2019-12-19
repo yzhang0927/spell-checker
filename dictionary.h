@@ -29,6 +29,9 @@ node;
 
 typedef node* hashmap_t;
 
+int check_words_buf(uint8_t *Data, size_t Size, hashmap_t hashtable[], char * misspelled[]); 
+
+
 /**
  * Array misspelled is populated with words that are misspelled. Returns the length of misspelled.
  */

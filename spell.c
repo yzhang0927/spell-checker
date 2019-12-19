@@ -32,6 +32,15 @@ bool isAsciiLetter(char ch) {
     }
 }
 
+int check_words(FILE* fp, hashmap_t hashtable[], char* misspelled[]) {
+    uint8_t *buf;
+    fseek(fp, 0, SEEK_END); 
+    long fsize = ftell(fp);
+    rewind(fp);
+    buf = malloc(fsize);
+    fread(buf, 1, fsize, fp);
+    return check_words_buf(buf, fsize, hashtable, misspelled);
+}
 
 /**
  * Array misspelled is populated with words that are misspelled. Returns the length of misspelled.
@@ -52,16 +61,17 @@ bool isAsciiLetter(char ch) {
  * Example:
  *  int num_misspelled = check_words(text_file, hashtable, misspelled);
  **/
-int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[]) {
+// int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[]) {
+int check_words_buf(uint8_t *Data, size_t Size, hashmap_t hashtable[], char * misspelled[]) {
     // Set int num_misspelled to 0.
     int numMisspelled = 0; 
     char currWord[LENGTH + 1]; 
     int currIndex = 0; 
     bool longword = false; 
-    char currChar = fgetc(fp);
+    char currChar = Data[currIndex];
     char nextChar; 
     while (currChar != EOF && numMisspelled < MAX_MISSPELLED) {
-        nextChar = fgetc(fp);
+        nextChar = Data[++currIndex];
         if (currIndex == LENGTH) {
             longword = true; 
             currWord[currIndex] = '\0';
@@ -90,7 +100,7 @@ int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[]) {
         }
         currChar = nextChar;
     }
-    fclose(fp);
+    // fclose(fp);
     return numMisspelled;
 }
 

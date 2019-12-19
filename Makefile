@@ -16,6 +16,10 @@ test: dictionary.o spell.o test_main.o
 	gcc -Wall -o test_main test_main.o spell.o dictionary.o -lcheck
 	./test_main
 
+fuzzer: dictionary.c spell.c fuzzer.c
+	clang -g -fsanitize=address,fuzzer dictionary.c
+	spell.c fuzzer.c -o fuzzer
+
 prog: dictionary.o spell.o main.o
 	gcc -Wall -o spell_check dictionary.o spell.o main.o
 
